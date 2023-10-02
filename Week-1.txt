@@ -5,4 +5,117 @@
 
 2. max = (a>b)?(a>c?a:c):(b>c?b:c); --> Max of 3 Numbers
 
-3.
+02-10-2023 :
+---------
+
+3. Synchronous(All at a time) vs Asynchronous Communication(one after another) :(Conference,1:1 Chat vs Email)
+
+4. REST VS SOAP :
+   a.Lack of Security(Security Compromises) vs WS High Security -ATOMICITY - Payments
+   b.Data Driven vs Function Driven
+   c.Stateless vs By Default stateless,we can make stateful.
+   d.Api call can be cached vs cannot be Cached.
+   f.HTML,XML,JSON,YAML VS XML
+   g.HTTP VS HTTP,SMTP,UDP.
+
+5.starter web services ---> SOAP.
+  Starter web -------------> REST
+
+6. @SpringBootApplication ---> @EnableAutoConfiguration + @ComponentScan + @Configuration
+
+7. Autoconfiguration works on conditions that are associated with particular dependencies.
+      
+  * AutoConfigurations --> DataSourceAutoConfig --> need to add Starter JPA
+  * By Default, Spring boot enables Auto-configurations for certain Classes.Enough though we have not added those Dependencies in Pom.xml.
+     Ex: AopAutoConfiguration
+  * To disable --> Appli.Prop : spring.autoconfigure.exclude=org.sprinf.boot.autoconfigure.aop.AopAutoConfigure
+
+8. Application.level.org.springframework=debug.
+   - You can see all positive(enabled AutoConfig) and negative. 
+
+
+9. Customize or override default Configurations ---> default port=8080
+    server.port=8085
+
+
+10.run() method works Internally ---> 1. Create ApplicationContext.
+                                      2. Register bean into Context.
+                                      3. Kicked up embedded tomcat Container to run Jar file
+
+11.  Command line runner --> interface. it has abstract run() method.(@PostConstrct)
+           Ex: class config extends CommandLineRunner{
+                   run(){
+                      //DB Connections,Pre processing Logic
+                        }
+              }
+
+
+12. Stereotype Annotations ---> specified detailing of annotations.
+         @Controller, @Service , @Repository
+    We can shuffle annotations and it runs successfully.But it doesnot make Sense.
+
+13. Alternative for Stereotype Annotation ---> Java Base Config.
+
+    @Configuration
+    public class Config{
+     
+        @Bean
+       public DemoService demoService(){
+        return new DemoService()
+       }
+}
+
+
+14. Dependency Injection is a Design pattern use to achieve Loose Coupling btw Classes by removing direct dependency btw them.
+          
+
+15. Setter vs Constructor Injection :
+    a.Obj creation is Optional vs Mandatory.
+    b. Can Achieve Circular Dependency vs Cannot Achieve.
+    c. Mutable in Nature vs Immutable in Nature.
+
+16. @PostConstructor Real World Use Cases : DB Connection, Kafka Prod-consumer Instantiate,Spring batch.
+
+    @Value("${discount.offer.price}")
+17. private int price;                    ----> Hardcoding value.
+
+    Sout(price);
+
+    Appli.Prop:
+     discount.offer.price=98
+
+
+             (or)
+
+    @Autowired
+    private Environment env;
+
+     Sout(env.getProperty("discount.offer.price"));
+
+
+18.YAML VS App.Prop :
+   a.Syntax Structure
+   b.Hierarchy
+   c.Arrays,List - myList=apple,banana
+                   myList:
+                    -apple
+                    -banana
+
+   d.Readability
+   e. More Precedence to Appl.prop
+
+19.Externally Loading Properties from File rather than Applic.prop,application YAML.
+    1.Create a file(test.properties) in Desktop Folder.
+    2. In Appl.Prop --> spring.config.import = c://users/desktop/javalessons/test.properties
+
+
+20. How to map or Bind Config Prop to Java Object?
+
+     @Configuration
+     @ConfigurationProperties(prefix="spring.properties")
+     public class Credentials{
+
+     private String username;
+     private String password;
+
+     }
