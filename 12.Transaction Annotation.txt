@@ -1,0 +1,57 @@
+1.Concurrency Control in Distributed System:
+---------------------------------------------
+Use-case : 3 persons trying to book same seat at same time? 
+Problem :allocated same seat to 3 Persons.
+Solution : synchronized.
+ 
+Question : will Synchronized work for Distributed Systems?
+- Synchronize works If In 1 process, we have Multiple Threads.
+- Consider 3 Machines(3 separate Booking Servers), 3 users book in 3 different
+  Servers. In this case, Synchronize won't Work.
+
+Solution : Distributed Concurrency Control.
+   - Optimistic Concurrency Control(OCC) - use Read Commited, work on DB Versioning.  Approach Ex: Two phase locking 
+   - Pessimistic Concurrency Control(PCC) -use Repeatable Read, Serializable(has Dead-Lock Issue)
+
+Imp Terms:
+---------
+1.Transaction : helps to achieve Integrity(TrustWorthy).
+2.DB Locking :make sure No other Transaction update Locked rows.
+   - Shared Lock(S): Read
+   - Exclusive Lock(X): Write
+
+3.Isolation Level:    Dirty Read       Non-Repeatable Read    Phantom Read
+ 1.Read Uncommited        Y                   Y                   Y
+ 2.Read Commited          N                   Y                   Y
+ 3.Repeatable Read        N                   N                   Y 
+ 4.Serializable           N                   N                   N
+
+
+4.Usecases & Locking:
+-------------------
+
+- Read Uncommited : Highly Consistent, Read-Heavy Applications(only read happens,no Writes).No Lock(Read,Write).
+- Read Commited : High Consistency(<Read Uncommited).Shared and Exclusive Lock.
+                  1.if Trans-A updating val A It put Exclusive Lock,Then Trans-B which is trying to read or write Waiting for Monitor 
+                    Lock,It gets rollback after some Period.So Dirty Read Not Possible.
+                  2.But Non-Repeatable Read is Possible because if Trans-A reads Val A by putting Shared Lock.Lock is  
+                    Released immediately after Read is Completed.Then Trans-B update A Val by putting Exclusive Lock until Commit Happens 
+                    So no other Transaction can read nor Write until Commit Happens.After Commit happens, Trans-A again Read val, Now Val 
+                    is Different(Non-Repeat)(Repeat means Same Value came).
+                  3.But Phantom Read is Possible because if Trans-A reads Val btw (10,15) by putting Shared Lock resulting in 2 Rows.Lock 
+                    is Released immediately after Read is Completed.Then Trans-B update or add Another Val by putting Exclusive Lock until 
+                    Commit Happens So no other Transaction can read nor Write until Commit Happens.After Commit happens, Trans-A again  
+                    Read val btw (10,15) resulting in 3 Rows(Phantom Prob - No of ROWS increases or Decrease).
+-Repeatable Read :  solves Non-Repeatable Read. But How? Shared Lock acquired and release only at end of Transaction(Commit happens).
+- Serializable : solves Phantom Read Problem through Repeatable Read + Range Lock(btw(10,15) shared Lock aquired, So we can't add new Rows 
+                 btw (10,15)).
+
+
+Fact :
+-----
+-Oracle DB does not have Version(by Default).so we have to add Column Version for Distributed systems.
+
+
+                       @Transaction(propogation=Propogation.REQUIRE)
+Propogation.REQUIRE => method1(){method2());
+
