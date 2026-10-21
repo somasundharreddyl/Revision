@@ -1,0 +1,2 @@
+1.EntityManager is created for each HTTP Request, different methods in same Http Request share the same Entity Manager.
+2.Dispatcher Servlet creates Entity Manager in prehandle Method.
